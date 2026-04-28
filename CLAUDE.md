@@ -85,15 +85,18 @@ wrangler secret put DATABASE_URL   # set a production secret
 
 ## Environment Variables
 
-Local secrets go in `.dev.vars` (gitignored). See `.dev.vars.example` for the required keys:
+Local secrets go in `.dev.vars` (gitignored). See `.dev.vars.example` for the required keys.
+
+All Cloudflare secrets are prefixed with `STANDINGS_` to avoid collisions in the shared Workers namespace.
 
 | Key | Where used | How to set in prod |
 |---|---|---|
-| `DATABASE_URL` | Drizzle + Better Auth | `wrangler secret put` |
-| `BETTER_AUTH_SECRET` | Better Auth signing | `wrangler secret put` |
-| `BETTER_AUTH_URL` | Better Auth base URL + CORS | `wrangler secret put` |
-| `SENTRY_DSN` | Backend Sentry (Worker) | `wrangler secret put` |
-| `VITE_SENTRY_DSN` | Frontend Sentry (browser bundle) | Build-time env var |
+| `STANDINGS_DATABASE_URL` | Drizzle + Better Auth | `wrangler secret put` |
+| `STANDINGS_BETTER_AUTH_SECRET` | Better Auth signing | `wrangler secret put` |
+| `STANDINGS_BETTER_AUTH_URL` | Better Auth base URL + CORS | `wrangler secret put` |
+| `STANDINGS_SENTRY_DSN` | Backend Sentry (Worker) | `wrangler secret put` |
+| `VITE_STANDINGS_SENTRY_DSN` | Frontend Sentry (browser bundle) | Build-time env var |
+| `VITE_STANDINGS_APP_URL` | Better Auth client base URL | Build-time env var |
 | `SENTRY_AUTH_TOKEN` | Source map upload (CI only) | CI secrets |
 | `SENTRY_ORG` | Source map upload (CI only) | CI secrets |
 | `SENTRY_PROJECT` | Source map upload (CI only) | CI secrets |

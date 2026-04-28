@@ -9,7 +9,7 @@ const app = new Hono<{ Bindings: Bindings }>();
 
 app.use("/api/*", async (c, next) => {
   const corsMiddleware = cors({
-    origin: c.env.BETTER_AUTH_URL,
+    origin: c.env.STANDINGS_BETTER_AUTH_URL,
     allowHeaders: ["Content-Type", "Authorization", "User-Agent"],
     allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     exposeHeaders: ["Content-Length"],
@@ -27,7 +27,7 @@ app.get("/api/health", (c) => c.json({ status: "ok" }));
 
 export default Sentry.withSentry(
   (env: Bindings) => ({
-    dsn: env.SENTRY_DSN,
+    dsn: env.STANDINGS_SENTRY_DSN,
     tracesSampleRate: 1.0,
     sendDefaultPii: true,
   }),
