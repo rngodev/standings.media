@@ -1,4 +1,4 @@
-# standings.media
+# takeoff
 
 ## Stack
 
@@ -20,7 +20,7 @@
 ## Project Structure
 
 ```
-standings.media/
+takeoff/
 ├── src/              # React frontend
 │   ├── main.tsx      # entry point (imports sentry.ts first)
 │   ├── sentry.ts     # frontend Sentry.init
@@ -101,7 +101,7 @@ Local secrets go in `.dev.vars` (gitignored). See `.dev.vars.example` for the re
 
 ## Data Model
 
-standings.media tracks pundit takes and community reactions to them.
+takeoff tracks pundit takes and community reactions to them.
 
 **Enums**
 - `take_kind`: `objective | subjective`

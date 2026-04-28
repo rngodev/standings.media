@@ -9,7 +9,7 @@ export function createAuth(env: CloudflareBindings) {
   const db = drizzle(sql, { schema });
 
   return betterAuth({
-    appName: "standings.media",
+    appName: "takeoff",
     basePath: "/api/auth",
     baseURL: env.BETTER_AUTH_URL,
     secret: env.BETTER_AUTH_SECRET,
