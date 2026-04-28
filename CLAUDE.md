@@ -131,6 +131,28 @@ standings.media tracks pundit takes and community reactions to them.
 
 **`createdByUserId`** — `pundits`, `takes`, and `resolutions` track which user created the record. Resolutions are admin-only writes.
 
+## Design System
+
+**Font** — Inter, loaded via Bunny Fonts in `index.html`. Registered as `--font-sans` in `src/index.css` with OpenType features (`cv02`, `cv03`, `cv04`, `cv11`, `ss01`, `ss03`). Apply `font-sans antialiased` on the root element.
+
+**Layout** — Page container is `max-w-4xl mx-auto px-4 sm:px-6 lg:px-8`. Page content starts at `py-10`.
+
+**Navigation** — Top header with `border-b border-gray-950/5`, `h-14` row, logo as plain `font-semibold` text link. Nav links are `text-sm text-gray-500` with `hover:text-gray-900`. Include a hamburger toggle for mobile with a dropdown panel below the header.
+
+**Colors** — Neutral base is `gray-*`. Verdict colors: emerald (correct), red (incorrect), gray (void). Always use opacity-based border/divide colors (`border-gray-950/10`, `divide-gray-950/5`, `divide-gray-950/10`) — never solid `gray-200` etc.
+
+**Stats block** — `grid grid-cols-3 rounded-xl border border-gray-950/10 divide-x divide-gray-950/10`. Each cell: `px-6 py-5`, label `text-sm text-gray-500`, value `text-3xl font-semibold tabular-nums text-gray-900`.
+
+**Pundit chips** — `rounded-full border border-gray-950/10 px-3 py-1.5` with a `size-5` avatar and `text-sm text-gray-700` name.
+
+**Avatars** — Sourced from `https://assets.ui.sh/avatars/{id}.webp`. Always add `outline-1 -outline-offset-1 outline-black/5` and `rounded-full object-cover`.
+
+**Tables** — `w-full`, headers `text-sm font-medium text-gray-500` (sentence case, `whitespace-nowrap`), rows divided by `divide-y divide-gray-950/5`, header row `border-b border-gray-950/10`. Wrap in responsive scroll container with `-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8` outer / `inline-block min-w-full px-4 py-2 align-middle sm:px-6 lg:px-8` inner.
+
+**Verdict badges** — `rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset`. Pending state: plain `text-sm text-gray-400` text (no badge).
+
+**Typography** — Headings use `font-semibold tracking-tight text-balance` (never `font-bold`). Body/descriptions use `text-pretty`. Numbers use `tabular-nums`.
+
 ## Adding Features
 
 **New API route** — add to `worker/index.ts` under `/api/*`.

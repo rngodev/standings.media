@@ -1,7 +1,16 @@
+import { BrowserRouter, Route, Routes } from "react-router";
+import Home from "./pages/Home";
+import Pundit from "./pages/Pundit";
+import Take from "./pages/Take";
+
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <h1 className="text-4xl font-bold text-gray-900">standings.media</h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/pundits/:slug" element={<Pundit />} />
+        <Route path="/takes/:slug" element={<Take />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
