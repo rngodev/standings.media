@@ -99,6 +99,38 @@ Local secrets go in `.dev.vars` (gitignored). See `.dev.vars.example` for the re
 | `SENTRY_ORG` | Source map upload (CI only) | CI secrets |
 | `SENTRY_PROJECT` | Source map upload (CI only) | CI secrets |
 
+## Data Model
+
+standings.media tracks pundit takes and community reactions to them.
+
+**Enums**
+- `take_kind`: `objective | subjective`
+- `resolution_outcome`: `correct | incorrect | void`
+- `position_stance`: `agree | disagree`
+
+**Core tables**
+
+| Table | Purpose |
+|---|---|
+| `pundits` | Media personalities who make takes |
+| `categories` | Admin-managed taxonomy for takes |
+| `takes` | A prediction or opinion made by a pundit |
+| `take_categories` | Junction table linking takes to categories |
+| `resolutions` | Admin determination of a take's outcome |
+| `positions` | A user's agree/disagree stance on a take |
+| `boosts` | A user flagging a take as interesting |
+| `pundit_follows` | A user following a pundit |
+
+**Soft deletes** — `pundits`, `takes`, `positions`, `boosts`, and `pundit_follows` all have a `deletedAt` column. Active records have `deletedAt IS NULL`. `categories` and `take_categories` hard-delete.
+
+**Resolutions** can supersede one another (e.g. to correct an error). The current active resolution for a take is the row with `deletedAt IS NULL`. A partial unique index on `(take_id) WHERE deleted_at IS NULL` enforces that at most one active resolution exists per take. When issuing a new resolution, set `deletedAt` on the prior one first.
+
+**Positions** use a delete-and-recreate pattern. To change stance: soft-delete the current position row and insert a new one. To remove a stance entirely: soft-delete without inserting.
+
+**Slugs** — `pundits` and `takes` both have a unique `slug` column used for URL routing. Slugs are always generated with a short random suffix (e.g. via nanoid) appended to avoid collisions. The base can be derived from the name/headline or manually provided.
+
+**`createdByUserId`** — `pundits`, `takes`, and `resolutions` track which user created the record. Resolutions are admin-only writes.
+
 ## Adding Features
 
 **New API route** — add to `worker/index.ts` under `/api/*`.
