@@ -1,6 +1,6 @@
 interface CloudflareBindings {
-  STANDINGS_DATABASE_URL: string;
-  STANDINGS_BETTER_AUTH_SECRET: string;
-  STANDINGS_BETTER_AUTH_URL: string;
-  STANDINGS_SENTRY_DSN: string;
+  DATABASE_URL: string;
+  BETTER_AUTH_SECRET: string;
+  BETTER_AUTH_URL: string;
+  SENTRY_DSN: string;
 }
