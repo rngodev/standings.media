@@ -133,21 +133,24 @@ takeoff tracks pundit takes and community reactions to them.
 
 ## Design System
 
-**Font** — Inter, loaded via Bunny Fonts in `index.html`. Registered as `--font-sans` in `src/index.css` with OpenType features (`cv02`, `cv03`, `cv04`, `cv11`, `ss01`, `ss03`). Apply `font-sans antialiased` on the root element.
+**Fonts** — Two fonts in play:
+- Body/UI: Geist, loaded via Bunny Fonts. Registered as `--font-geist` in `src/index.css`. Apply `font-geist antialiased` on the root element.
+- Logo: Permanent Marker, loaded from Google Fonts. Registered as `--font-marker`. Apply `font-marker` to the logo link only.
+- Inter is still loaded as `--font-sans` fallback (with OpenType features `cv02`, `cv03`, `cv04`, `cv11`, `ss01`, `ss03`).
 
-**Layout** — Page container is `max-w-4xl mx-auto px-4 sm:px-6 lg:px-8`. Page content starts at `py-10`.
+**Layout** — Page container is `max-w-4xl mx-auto px-4 sm:px-6 lg:px-8`. Page content starts at `py-10`. Page background is `bg-zinc-50`.
 
-**Navigation** — Top header with `border-b border-gray-950/5`, `h-14` row, logo as plain `font-semibold` text link. Nav links are `text-sm text-gray-500` with `hover:text-gray-900`. Include a hamburger toggle for mobile with a dropdown panel below the header.
+**Navigation** — Dark header: `bg-zinc-950 border-b border-white/5`, `h-14` row. Logo is `font-marker text-3xl text-sky-400`. Nav links are `text-sm text-zinc-400` with `hover:text-sky-400`. Mobile dropdown uses `bg-zinc-950 border-t border-white/5` with `text-zinc-300` links.
 
-**Colors** — Neutral base is `gray-*`. Verdict colors: emerald (correct), red (incorrect), gray (void). Always use opacity-based border/divide colors (`border-gray-950/10`, `divide-gray-950/5`, `divide-gray-950/10`) — never solid `gray-200` etc.
+**Colors** — Neutral base is `zinc-*`. Primary accent is `sky-400` (interactive elements, logo) / `sky-500` (on light backgrounds). Verdict colors: emerald (correct), red (incorrect), gray (void). Use solid zinc borders (`border-zinc-200`, `divide-zinc-100`, `divide-zinc-200`) on light surfaces; use opacity-based white borders (`border-white/5`) on dark surfaces.
 
-**Stats block** — `grid grid-cols-3 rounded-xl border border-gray-950/10 divide-x divide-gray-950/10`. Each cell: `px-6 py-5`, label `text-sm text-gray-500`, value `text-3xl font-semibold tabular-nums text-gray-900`.
+**Stats block** — `grid grid-cols-3 rounded-xl border border-zinc-200 divide-x divide-zinc-200 bg-white`. Each cell: `px-6 py-5`, label `text-sm text-zinc-500`, value `text-3xl font-semibold tabular-nums text-zinc-900`. The "Verified correct" value uses `text-sky-500`.
 
-**Pundit chips** — `rounded-full border border-gray-950/10 px-3 py-1.5` with a `size-5` avatar and `text-sm text-gray-700` name.
+**Pundit chips** — `rounded-full border border-zinc-200 bg-white px-3 py-1.5` with a `size-5` avatar and `text-sm text-zinc-700` name.
 
 **Avatars** — Sourced from `https://assets.ui.sh/avatars/{id}.webp`. Always add `outline-1 -outline-offset-1 outline-black/5` and `rounded-full object-cover`.
 
-**Tables** — `w-full`, headers `text-sm font-medium text-gray-500` (sentence case, `whitespace-nowrap`), rows divided by `divide-y divide-gray-950/5`, header row `border-b border-gray-950/10`. Wrap in responsive scroll container with `-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8` outer / `inline-block min-w-full px-4 py-2 align-middle sm:px-6 lg:px-8` inner.
+**Tables** — `w-full`, headers `text-sm font-medium text-zinc-500` (sentence case, `whitespace-nowrap`), rows divided by `divide-y divide-zinc-100`, header row `border-b border-zinc-200`. Wrap in responsive scroll container with `-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8` outer / `inline-block min-w-full px-4 py-2 align-middle sm:px-6 lg:px-8` inner.
 
 **Verdict badges** — `rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset`. Pending state: plain `text-sm text-gray-400` text (no badge).
 
