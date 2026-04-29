@@ -1,58 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const takes = [
-  {
-    id: 1,
-    pundit: "Colin Cowherd",
-    avatarId: 3,
-    headline: "The Lakers will not make the playoffs this season.",
-    kind: "objective" as const,
-    date: "Oct 12, 2024",
-    resolution: "correct" as const,
-  },
-  {
-    id: 2,
-    pundit: "Skip Bayless",
-    avatarId: 5,
-    headline: "Dak Prescott will never win a Super Bowl.",
-    kind: "subjective" as const,
-    date: "Sep 5, 2024",
-    resolution: null,
-  },
-  {
-    id: 3,
-    pundit: "Stephen A. Smith",
-    avatarId: 7,
-    headline: "The Knicks are a legitimate title contender this year.",
-    kind: "objective" as const,
-    date: "Nov 1, 2024",
-    resolution: "incorrect" as const,
-  },
-  {
-    id: 4,
-    pundit: "Shannon Sharpe",
-    avatarId: 2,
-    headline: "Patrick Mahomes will win his fourth MVP before turning 30.",
-    kind: "objective" as const,
-    date: "Aug 20, 2024",
-    resolution: null,
-  },
-  {
-    id: 5,
-    pundit: "Mina Kimes",
-    avatarId: 9,
-    headline: "CJ Stroud is a top-five quarterback in the league right now.",
-    kind: "subjective" as const,
-    date: "Oct 28, 2024",
-    resolution: null,
-  },
-];
-
-const stats = [
-  { label: "Takes tracked", value: "5" },
-  { label: "Verified correct", value: "1" },
-  { label: "Pending verdict", value: "3" },
-];
+type Take = {
+  id: string;
+  slug: string;
+  headline: string;
+  kind: "objective" | "subjective";
+  statedAt: string;
+  punditId: string;
+  punditSlug: string;
+  punditName: string;
+  punditImage: string | null;
+  resolutionOutcome: "correct" | "incorrect" | "void" | null;
+};
 
 const resolutionLabel = {
   correct: "Correct",
@@ -66,13 +25,30 @@ const resolutionClass = {
   void: "bg-gray-100 text-gray-600 ring-gray-500/20",
 } as const;
 
-function Avatar({ id, className }: { id: number; className: string }) {
+function Avatar({
+  src,
+  name,
+  className,
+}: {
+  src: string | null;
+  name: string;
+  className: string;
+}) {
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt=""
+        className={`${className} rounded-full object-cover outline-1 -outline-offset-1 outline-black/5`}
+      />
+    );
+  }
   return (
-    <img
-      src={`https://assets.ui.sh/avatars/${id}.webp`}
-      alt=""
-      className={`${className} rounded-full object-cover outline-1 -outline-offset-1 outline-black/5`}
-    />
+    <span
+      className={`${className} rounded-full bg-zinc-200 flex items-center justify-center text-xs font-medium text-zinc-600 outline-1 -outline-offset-1 outline-black/5`}
+    >
+      {name[0]}
+    </span>
   );
 }
 
@@ -92,8 +68,46 @@ function VerdictBadge({
   );
 }
 
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
 export default function Home() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [takes, setTakes] = useState<Take[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/takes")
+      .then((r) => r.json<{ takes: Take[] }>())
+      .then((data) => setTakes(data.takes))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const uniquePundits = Array.from(
+    new Map(
+      takes.map((t) => [
+        t.punditId,
+        { id: t.punditId, name: t.punditName, image: t.punditImage },
+      ]),
+    ).values(),
+  );
+
+  const stats = [
+    { label: "Takes tracked", value: takes.length },
+    {
+      label: "Verified correct",
+      value: takes.filter((t) => t.resolutionOutcome === "correct").length,
+    },
+    {
+      label: "Pending verdict",
+      value: takes.filter((t) => !t.resolutionOutcome).length,
+    },
+  ];
 
   return (
     <div className="min-h-dvh bg-zinc-50 font-geist antialiased isolate">
@@ -163,19 +177,25 @@ export default function Home() {
           forgotten.
         </p>
 
-        <div className="mt-8 flex flex-wrap gap-2">
-          {takes.map((take) => (
-            <div
-              key={take.id}
-              className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5"
-            >
-              <Avatar id={take.avatarId} className="size-5 shrink-0" />
-              <span className="text-sm text-zinc-700">
-                {take.pundit.split(" ")[0]}
-              </span>
-            </div>
-          ))}
-        </div>
+        {!loading && uniquePundits.length > 0 && (
+          <div className="mt-8 flex flex-wrap gap-2">
+            {uniquePundits.map((pundit) => (
+              <div
+                key={pundit.id}
+                className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1.5"
+              >
+                <Avatar
+                  src={pundit.image}
+                  name={pundit.name}
+                  className="size-5 shrink-0"
+                />
+                <span className="text-sm text-zinc-700">
+                  {pundit.name.split(" ")[0]}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
 
         <dl className="mt-6 grid grid-cols-3 rounded-xl border border-zinc-200 divide-x divide-zinc-200 bg-white">
           {stats.map((stat, i) => (
@@ -184,7 +204,7 @@ export default function Home() {
               <dd
                 className={`mt-1 text-3xl font-semibold tabular-nums ${i === 1 ? "text-sky-500" : "text-zinc-900"}`}
               >
-                {stat.value}
+                {loading ? "—" : stat.value}
               </dd>
             </div>
           ))}
@@ -227,7 +247,8 @@ export default function Home() {
                     <td className="py-4 pr-6">
                       <div className="flex items-start gap-3">
                         <Avatar
-                          id={take.avatarId}
+                          src={take.punditImage}
+                          name={take.punditName}
                           className="size-8 mt-0.5 shrink-0"
                         />
                         <div>
@@ -235,7 +256,7 @@ export default function Home() {
                             {take.headline}
                           </p>
                           <p className="mt-0.5 text-sm text-zinc-500">
-                            {take.pundit}
+                            {take.punditName}
                           </p>
                         </div>
                       </div>
@@ -244,10 +265,10 @@ export default function Home() {
                       {take.kind}
                     </td>
                     <td className="py-4 pr-6 text-sm tabular-nums text-zinc-500">
-                      {take.date}
+                      {formatDate(take.statedAt)}
                     </td>
                     <td className="py-4">
-                      <VerdictBadge resolution={take.resolution} />
+                      <VerdictBadge resolution={take.resolutionOutcome} />
                     </td>
                   </tr>
                 ))}
