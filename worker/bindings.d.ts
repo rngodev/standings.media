@@ -3,4 +3,5 @@ interface CloudflareBindings {
   BETTER_AUTH_SECRET: string;
   BETTER_AUTH_URL: string;
   SENTRY_DSN: string;
+  USE_LOCAL_DB?: string;
 }
